@@ -33,6 +33,7 @@ class SpalshFragment : Fragment() {
 
         binding.loginBtn.setOnClickListener {
 
+            findNavController().navigate(R.id.action_spalshFragment_to_loginFragment)
         }
 
 

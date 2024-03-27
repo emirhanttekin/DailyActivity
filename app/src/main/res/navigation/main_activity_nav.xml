@@ -3,11 +3,29 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_activity_nav"
-    app:startDestination="@id/spalshFragment">
+    app:startDestination="@id/firstSpalshFragment">
 
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.dailyactivity.view.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" />
+    <fragment
+        android:id="@+id/firstSpalshFragment"
+        android:name="com.example.dailyactivity.view.FirstSpalshFragment"
+        android:label="fragment_first_spalsh"
+        tools:layout="@layout/fragment_first_spalsh" >
+        <action
+            android:id="@+id/action_firstSpalshFragment_to_spalshFragment"
+            app:destination="@id/spalshFragment" />
+    </fragment>
     <fragment
         android:id="@+id/spalshFragment"
         android:name="com.example.dailyactivity.view.SpalshFragment"
         android:label="fragment_spalsh"
-        tools:layout="@layout/fragment_spalsh" />
+        tools:layout="@layout/fragment_spalsh" >
+        <action
+            android:id="@+id/action_spalshFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
 </navigation>
