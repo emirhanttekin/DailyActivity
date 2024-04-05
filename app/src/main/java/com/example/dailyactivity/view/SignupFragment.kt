@@ -7,12 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.example.dailyactivity.R
-import com.example.dailyactivity.databinding.FragmentSpalshBinding
-
-class SpalshFragment : Fragment() {
-    private lateinit var binding  : FragmentSpalshBinding
+import com.example.dailyactivity.databinding.FragmentSignupBinding
 
 
+class SignupFragment : Fragment() {
+    private lateinit var  binding : FragmentSignupBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,23 +23,16 @@ class SpalshFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-       binding = FragmentSpalshBinding.inflate(inflater , container, false)
-        return binding.root
+        binding = FragmentSignupBinding.inflate(inflater, container, false)
+
+        return  binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        binding.loginBtn.setOnClickListener {
-
-            findNavController().navigate(R.id.action_spalshFragment_to_loginFragment)
+        binding.btnSigin.setOnClickListener {
+            findNavController().navigate(R.id.action_signupFragment_to_loginFragment)
         }
-        binding.signupBtn.setOnClickListener {
-            findNavController().navigate(R.id.action_spalshFragment_to_signupFragment)
-        }
-
-
-
     }
 
 
