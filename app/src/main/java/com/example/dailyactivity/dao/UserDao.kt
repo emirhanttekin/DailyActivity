@@ -9,10 +9,10 @@ import com.example.dailyactivity.entity.User
 @Dao
 interface UserDao {
     @Insert
-    suspend fun insert(user : User)
+    suspend fun insert(user: User)
 
-    @Query("SELECT * FROM users WHERE username = :username  AND password = :password")
-    suspend fun login(username: String, password: String) : User?
+    @Query("SELECT * FROM users WHERE username = :username AND password = :password")
+    suspend fun login(username: String, password: String): User?
 
     @Query("SELECT * FROM users WHERE email = :email")
     suspend fun getUserByEmail(email: String): User?
@@ -20,9 +20,6 @@ interface UserDao {
     @Query("SELECT * FROM users WHERE phone = :phone")
     suspend fun getUserByPhone(phone: String): User?
 
-    @Query("SELECT * FROM users Where  id = :id")
-    suspend fun  getUserById(id: Int): User?
-
-
-
+    @Query("SELECT * FROM users WHERE id = :id")
+    suspend fun getUserById(id: Int): User?
 }

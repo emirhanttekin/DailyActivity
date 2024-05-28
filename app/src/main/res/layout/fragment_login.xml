@@ -37,7 +37,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.0" />
+        app:layout_constraintGuide_percent="0.08" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline13"
@@ -172,8 +172,10 @@
         android:src="@drawable/message"
         app:layout_constraintBottom_toBottomOf="@+id/email_text"
         app:layout_constraintEnd_toStartOf="@+id/email_text"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/guideline12"
-        app:layout_constraintTop_toTopOf="@+id/email_text" />
+        app:layout_constraintTop_toTopOf="@+id/email_text"
+        app:layout_constraintVertical_bias="0.521" />
 
     <EditText
         android:id="@+id/password_text"
@@ -196,8 +198,10 @@
         android:src="@drawable/lock"
         app:layout_constraintBottom_toBottomOf="@+id/password_text"
         app:layout_constraintEnd_toStartOf="@+id/password_text"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/guideline12"
-        app:layout_constraintTop_toTopOf="@+id/password_text" />
+        app:layout_constraintTop_toTopOf="@+id/password_text"
+        app:layout_constraintVertical_bias="0.444" />
 
     <TextView
         android:id="@+id/textView"
@@ -208,10 +212,10 @@
         android:text="Hesabınız yok mu ?"
         app:layout_constraintBottom_toTopOf="@+id/guideline10"
         app:layout_constraintEnd_toStartOf="@+id/guideline13"
-        app:layout_constraintHorizontal_bias="0.472"
+        app:layout_constraintHorizontal_bias="0.365"
         app:layout_constraintStart_toStartOf="@+id/guideline12"
         app:layout_constraintTop_toTopOf="@+id/guideline10"
-        app:layout_constraintVertical_bias="0.729" />
+        app:layout_constraintVertical_bias="0.75" />
 
     <TextView
         android:id="@+id/btn_signup"
@@ -222,9 +226,8 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/guideline10"
         app:layout_constraintEnd_toStartOf="@+id/guideline13"
-        app:layout_constraintHorizontal_bias="0.755"
+        app:layout_constraintHorizontal_bias="0.764"
         app:layout_constraintStart_toStartOf="@+id/guideline12"
-        app:layout_constraintTop_toTopOf="@+id/guideline10"
-        app:layout_constraintVertical_bias="0.958" />
+        app:layout_constraintTop_toTopOf="@+id/guideline10" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
