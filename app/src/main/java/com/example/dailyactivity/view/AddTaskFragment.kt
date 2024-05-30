@@ -20,7 +20,8 @@ class AddTaskFragment : Fragment() {
     private lateinit var binding: FragmentAddTaskBinding
     private lateinit var viewModel: TaskViewModel
     private lateinit var db: AppDatabase
-    private var userId: Int = 0
+    private var userId: Int = -1
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,7 +43,7 @@ class AddTaskFragment : Fragment() {
 
         val factory = TaskViewModelFactory(repository)
         viewModel = ViewModelProvider(this, factory).get(TaskViewModel::class.java)
-        userId = arguments?.getInt("userId") ?: 0
+
         setupRadioListeners()
         setupCalendarClickListener()
 
@@ -71,6 +72,7 @@ class AddTaskFragment : Fragment() {
                 description = description,
                 type = type,
                 tags = tags,
+
             )
             viewModel.insertTask(task)
         }
@@ -84,28 +86,28 @@ class AddTaskFragment : Fragment() {
     }
 
     private fun setupRadioListeners() {
-        binding.tags1.setOnCheckedChangeListener { buttonView, isChecked ->
+        binding.tags1.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 binding.tags2.isChecked = false
                 binding.tags3.isChecked = false
                 binding.tags4.isChecked = false
             }
         }
-        binding.tags2.setOnCheckedChangeListener { buttonView, isChecked ->
+        binding.tags2.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 binding.tags1.isChecked = false
                 binding.tags3.isChecked = false
                 binding.tags4.isChecked = false
             }
         }
-        binding.tags3.setOnCheckedChangeListener { buttonView, isChecked ->
+        binding.tags3.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 binding.tags1.isChecked = false
                 binding.tags2.isChecked = false
                 binding.tags4.isChecked = false
             }
         }
-        binding.tags4.setOnCheckedChangeListener { buttonView, isChecked ->
+        binding.tags4.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 binding.tags1.isChecked = false
                 binding.tags2.isChecked = false
@@ -133,4 +135,3 @@ class AddTaskFragment : Fragment() {
         datePickerDialog.show()
     }
 }
-

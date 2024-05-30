@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 data class Task(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
+
     val title: String,
     val startDate: String, // Başlangıç Tarihi (dd/MM/yyyy formatında)
     val startTime: String, // Başlangıç Zamanı (HH:mm formatında)
