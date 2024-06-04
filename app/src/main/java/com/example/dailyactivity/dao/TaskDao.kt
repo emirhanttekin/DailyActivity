@@ -3,24 +3,24 @@ package com.example.dailyactivity.dao
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import com.example.dailyactivity.entity.Task
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TaskDao {
+
     @Insert
     suspend fun insert(task: Task)
 
-    @Query("SELECT * FROM tasks")
-    fun getAllTasks(): Flow<List<Task>>
+    @Query("SELECT * FROM tasks WHERE userId = :userId")
+    fun getTasksForUser(userId: Int): Flow<List<Task>>
 
     @Query("SELECT * FROM tasks WHERE id = :taskId")
     suspend fun getTaskById(taskId: Int): Task?
 
-
-
-    @Query("UPDATE tasks SET title = :title, startDate = :startDate, startTime = :startTime, endTime = :endTime, description = :description, type = :type, tags = :tags WHERE id = :taskId")
-    suspend fun updateTask(taskId: Int, title: String, startDate: String, startTime: String, endTime: String, description: String, type: String, tags: String)
+    @Update
+    suspend fun updateTask(task: Task)
 
     @Query("DELETE FROM tasks WHERE id = :taskId")
     suspend fun deleteTask(taskId: Int)

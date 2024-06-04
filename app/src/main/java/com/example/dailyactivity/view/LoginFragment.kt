@@ -1,5 +1,6 @@
 package com.example.dailyactivity.view
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -59,20 +60,22 @@ class LoginFragment : Fragment() {
                 return@setOnClickListener
             }
 
-           loginViewModel.login(email , password) { result ->
-               when(result) {
-                   is LoginViewModel.Result.Success -> {
-                       Toast.makeText(requireContext(), "Giriş Başarılı" ,Toast.LENGTH_SHORT).show()
-                       findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
-                   }
-                   is LoginViewModel.Result.Error -> {
-                       Toast.makeText(requireContext() , result.message , Toast.LENGTH_SHORT).show()
-               }
+            loginViewModel.login(email, password) { result ->
+                when(result) {
+                    is LoginViewModel.Result.Success -> {
+                        val sharedPreferences = requireActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+                        sharedPreferences.edit().putInt("userId", result.user.id).apply()
 
-           }
-           }
-
+                        Toast.makeText(requireContext(), "Giriş Başarılı", Toast.LENGTH_SHORT).show()
+                        findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
+                    }
+                    is LoginViewModel.Result.Error -> {
+                        Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
         }
+
     }
 }
 

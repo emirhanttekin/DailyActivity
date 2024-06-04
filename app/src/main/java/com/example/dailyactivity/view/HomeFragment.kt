@@ -1,5 +1,6 @@
 package com.example.dailyactivity.view
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -33,18 +34,26 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupRecyclerView()
-        observeViewModel()
+        val sharedPreferences = requireActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+        val userId = sharedPreferences.getInt("userId", -1)
+
+        if (userId != -1) {
+            setupRecyclerView()
+            observeViewModel(userId)
+        } else {
+            // Handle the case where userId is not found
+        }
     }
 
     private fun setupRecyclerView() {
-        adapter = HomeAdapter(emptyList())
+        adapter = HomeAdapter(emptyList(), HomeAdapter.VIEW_TYPE_NORMAL)
         binding.homeRecyclerView.layoutManager = LinearLayoutManager(context)
         binding.homeRecyclerView.adapter = adapter
     }
 
-    private fun observeViewModel() {
-        taskViewModel.tasks.observe(viewLifecycleOwner) { tasks ->
+    private fun observeViewModel(userId: Int) {
+        taskViewModel.setUserId(userId)
+        taskViewModel.allTasks.observe(viewLifecycleOwner) { tasks ->
             adapter.updateTasks(tasks)
         }
     }

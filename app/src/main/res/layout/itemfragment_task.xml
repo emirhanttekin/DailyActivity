@@ -1,9 +1,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@drawable/rectangle15"
+    android:background="@drawable/itemfragment"
     android:padding="30dp"
     android:layout_marginTop="8dp"
     android:layout_marginBottom="8dp">
@@ -11,7 +11,7 @@
     <!-- Diğer içerikler burada -->
 
     <TextView
-        android:id="@+id/taskTitle"
+        android:id="@+id/taskTitles"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Task Title"
@@ -21,7 +21,7 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/taskDescription"
+        android:id="@+id/taskDescriptionn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
@@ -30,7 +30,7 @@
         android:textSize="14sp" />
 
     <TextView
-        android:id="@+id/taskTime"
+        android:id="@+id/taskTimes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/myfont"

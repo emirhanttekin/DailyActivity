@@ -1,20 +1,56 @@
 package com.example.dailyactivity.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.dailyactivity.entity.Task
 import com.example.dailyactivity.repository.TaskRepository
-import com.example.dailyactivity.repository.UserRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class TaskViewModel(private val repository: TaskRepository) : ViewModel() {
-    val tasks: LiveData<List<Task>> = repository.getAllTasks().asLiveData()
+
+    private val _userId = MutableLiveData<Int>()
+
+    val allTasks: LiveData<List<Task>> = _userId.switchMap { userId ->
+        if (userId == -1) {
+            repository.getAllTasks().asLiveData()
+        } else {
+            repository.getTasksByUserId(userId).asLiveData()
+        }
+    }
+
+    val todayTasks: LiveData<List<Task>> = _userId.switchMap { userId ->
+        repository.getTasksByUserId(userId).map { tasks ->
+            tasks.filter { it.isToday() }
+        }.asLiveData()
+    }
+
+    val thisWeekTasks: LiveData<List<Task>> = _userId.switchMap { userId ->
+        repository.getTasksByUserId(userId).map { tasks ->
+            tasks.filter { it.isThisWeek() }
+        }.asLiveData()
+    }
+
+    fun setUserId(userId: Int) {
+        _userId.value = userId
+    }
 
     fun insertTask(task: Task) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             repository.insertTask(task)
         }
     }
+
+    fun updateTask(task: Task) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.updateTask(task)
+        }
+    }
+
+    fun deleteTask(taskId: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteTask(taskId)
+        }
+    }
 }
+

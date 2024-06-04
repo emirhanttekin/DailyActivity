@@ -1,12 +1,19 @@
 package com.example.dailyactivity.view
 
+
+
+
+import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import com.example.dailyactivity.R
 import com.example.dailyactivity.database.AppDatabase
 import com.example.dailyactivity.databinding.FragmentAddTaskBinding
 import com.example.dailyactivity.entity.Task
@@ -19,15 +26,12 @@ class AddTaskFragment : Fragment() {
 
     private lateinit var binding: FragmentAddTaskBinding
     private lateinit var viewModel: TaskViewModel
-    private lateinit var db: AppDatabase
     private var userId: Int = -1
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
+    ): View {
         binding = FragmentAddTaskBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -43,6 +47,10 @@ class AddTaskFragment : Fragment() {
 
         val factory = TaskViewModelFactory(repository)
         viewModel = ViewModelProvider(this, factory).get(TaskViewModel::class.java)
+
+        // Kullanıcı ID'sini SharedPreferences'dan alın
+        val sharedPreferences = requireActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+        userId = sharedPreferences.getInt("userId", -1)
 
         setupRadioListeners()
         setupCalendarClickListener()
@@ -63,18 +71,21 @@ class AddTaskFragment : Fragment() {
                 binding.tags4.isChecked -> tags = "İş"
             }
 
-            // Görevi veritabanına ekle
-            val task = Task(
-                title = title,
-                startDate = date,
-                startTime = startTime,
-                endTime = endTime,
-                description = description,
-                type = type,
-                tags = tags,
-
-            )
-            viewModel.insertTask(task)
+            if (userId != -1) {
+                // Görevi veritabanına ekle
+                val task = Task(
+                    userId = userId,
+                    title = title,
+                    startDate = date,
+                    startTime = startTime,
+                    endTime = endTime,
+                    description = description,
+                    type = type,
+                    tags = tags
+                )
+                viewModel.insertTask(task)
+            }
+            showSuccessDialog()
         }
 
         // EditText alanı tıklandığında takvim açılması
@@ -134,4 +145,15 @@ class AddTaskFragment : Fragment() {
         }, year, month, day)
         datePickerDialog.show()
     }
+
+    private fun  showSuccessDialog() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Başarılı")
+            .setMessage("Görev Başarıyla Kaydedildi")
+            .setPositiveButton("Tamam") { dialog, _ -> dialog.dismiss()}
+        findNavController().navigate(R.id.action_addTaskFragment_to_homeFragment)
+    }
+
+
 }
+
