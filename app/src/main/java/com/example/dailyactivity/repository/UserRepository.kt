@@ -9,6 +9,14 @@ class UserRepository(private val db: AppDatabase) {
         return db.userDao().getUserByEmail(email)
     }
 
+    suspend fun getUserById(userId: Int): User? {
+        return db.userDao().getUserById(userId)
+    }
 
-
+    suspend fun updateUser(user: User) {
+        db.userDao().update(user)
+    }
+    suspend fun updatePhoto(userId: Int, photo: String) {
+        db.userDao().updatePhoto(userId, photo)
+    }
 }

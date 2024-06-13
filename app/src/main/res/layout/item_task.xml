@@ -8,8 +8,6 @@
     android:layout_marginTop="8dp"
     android:layout_marginBottom="8dp">
 
-    <!-- Diğer içerikler burada -->
-
     <TextView
         android:id="@+id/taskTitle"
         android:layout_width="wrap_content"
@@ -19,6 +17,20 @@
         android:textColor="#2C406E"
         android:textStyle="bold"
         android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/emptyText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bugün görev eklenmedi."
+        android:fontFamily="@font/myfont"
+        android:textSize="18sp"
+        android:textColor="#2C406E"
+        android:textStyle="bold"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_marginTop="16dp"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/taskDescription"
@@ -39,6 +51,5 @@
         android:layout_marginTop="4dp" />
 
     <!-- Uzunlamasına çizgi -->
-
 
 </LinearLayout>

@@ -1,5 +1,6 @@
 package com.example.dailyactivity.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.*
 import com.example.dailyactivity.entity.Task
 import com.example.dailyactivity.repository.TaskRepository
@@ -19,16 +20,24 @@ class TaskViewModel(private val repository: TaskRepository) : ViewModel() {
         }
     }
 
-    val todayTasks: LiveData<List<Task>> = _userId.switchMap { userId ->
-        repository.getTasksByUserId(userId).map { tasks ->
+
+
+
+
+    fun getTasksForToday(userId: Int): LiveData<List<Task>> {
+        return repository.getTasksByUserId(userId).map { tasks ->
             tasks.filter { it.isToday() }
         }.asLiveData()
     }
 
-    val thisWeekTasks: LiveData<List<Task>> = _userId.switchMap { userId ->
-        repository.getTasksByUserId(userId).map { tasks ->
+    fun getTasksForThisWeek(userId: Int): LiveData<List<Task>> {
+        return repository.getTasksByUserId(userId).map { tasks ->
             tasks.filter { it.isThisWeek() }
         }.asLiveData()
+    }
+
+    fun getTasksForAll(userId: Int): LiveData<List<Task>> {
+        return repository.getTasksByUserId(userId).asLiveData()
     }
 
     fun setUserId(userId: Int) {
@@ -37,7 +46,12 @@ class TaskViewModel(private val repository: TaskRepository) : ViewModel() {
 
     fun insertTask(task: Task) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.insertTask(task)
+            try {
+                repository.insertTask(task)
+                Log.d("TaskViewModel", "Task inserted successfully.")
+            } catch (e: Exception) {
+                Log.e("TaskViewModel", "Error inserting task: ${e.message}")
+            }
         }
     }
 
@@ -51,6 +65,24 @@ class TaskViewModel(private val repository: TaskRepository) : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             repository.deleteTask(taskId)
         }
+    }
+
+    fun getTaskCountForToday(userId: Int): LiveData<Int> {
+        return repository.getTasksByUserId(userId).map { tasks ->
+            tasks.count { it.isToday() }
+        }.asLiveData()
+    }
+
+    fun getTaskCountForThisWeek(userId: Int): LiveData<Int> {
+        return repository.getTasksByUserId(userId).map { tasks ->
+            tasks.count { it.isThisWeek() }
+        }.asLiveData()
+    }
+
+    fun getTaskCountForThisYear(userId: Int): LiveData<Int> {
+        return repository.getTasksByUserId(userId).map { tasks ->
+            tasks.count { it.isThisYear() }
+        }.asLiveData()
     }
 }
 

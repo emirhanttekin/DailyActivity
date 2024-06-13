@@ -58,6 +58,12 @@
         <action
             android:id="@+id/action_homeFragment_to_taskFragment"
             app:destination="@id/taskFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_graphichFragment"
+            app:destination="@id/graphichFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
     </fragment>
     <fragment
         android:id="@+id/addTaskFragment"
@@ -76,6 +82,20 @@
         android:name="com.example.dailyactivity.view.TaskFragment"
         android:label="fragment_task"
         tools:layout="@layout/fragment_task" />
+    <fragment
+        android:id="@+id/graphichFragment"
+        android:name="com.example.dailyactivity.view.GraphichFragment"
+        android:label="fragment_graphich"
+        tools:layout="@layout/fragment_graphich" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.dailyactivity.view.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_profileFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
 
 
 </navigation>

@@ -2,6 +2,7 @@ package com.example.dailyactivity.view
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +16,7 @@ import com.example.dailyactivity.database.AppDatabase
 import com.example.dailyactivity.databinding.FragmentTaskBinding
 import com.example.dailyactivity.repository.TaskRepository
 import com.example.dailyactivity.utils.HorizontalSpaceItemDecoration
+import com.example.dailyactivity.utils.SharedPreferencesHelper
 import com.example.dailyactivity.viewmodel.TaskViewModel
 import com.example.dailyactivity.viewmodel.TaskViewModelFactory
 
@@ -52,31 +54,31 @@ class TaskFragment : Fragment() {
         setupRecyclerView(binding.homeTodayrecyclerView, adapterToday, padding)
         setupRecyclerView(binding.homeThisweekrecyclerView2, adapterThisWeek, padding)
 
-        observeViewModel()
+        observeTasks()
+    }
+
+    private fun observeTasks() {
+        val userId = SharedPreferencesHelper.getUserId(requireContext())
+        Log.d("TaskFragment", "User ID: $userId")
+
+        taskViewModel.setUserId(userId)
+
+        taskViewModel.getTasksForToday(userId).observe(viewLifecycleOwner, { tasks ->
+            adapterToday.updateTasks(tasks)
+        })
+
+        taskViewModel.getTasksForThisWeek(userId).observe(viewLifecycleOwner, { tasks ->
+            adapterThisWeek.updateTasks(tasks)
+        })
+
+        taskViewModel.getTasksForAll(userId).observe(viewLifecycleOwner, { tasks ->
+            adapterAll.updateTasks(tasks)
+        })
     }
 
     private fun setupRecyclerView(recyclerView: RecyclerView, adapter: HomeAdapter, padding: Int) {
         recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         recyclerView.adapter = adapter
         recyclerView.addItemDecoration(HorizontalSpaceItemDecoration(padding))
-    }
-
-    private fun observeViewModel() {
-        val sharedPreferences = requireActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
-        val userId = sharedPreferences.getInt("userId", -1)
-
-        taskViewModel.setUserId(userId)
-
-        taskViewModel.todayTasks.observe(viewLifecycleOwner) { todayTasks ->
-            adapterToday.updateTasks(todayTasks)
-        }
-
-        taskViewModel.thisWeekTasks.observe(viewLifecycleOwner) { thisWeekTasks ->
-            adapterThisWeek.updateTasks(thisWeekTasks)
-        }
-
-        taskViewModel.allTasks.observe(viewLifecycleOwner) { allTasks ->
-            adapterAll.updateTasks(allTasks)
-        }
     }
 }

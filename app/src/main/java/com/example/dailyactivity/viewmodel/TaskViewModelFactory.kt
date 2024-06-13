@@ -2,7 +2,6 @@ package com.example.dailyactivity.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.dailyactivity.entity.Task
 import com.example.dailyactivity.repository.TaskRepository
 
 class TaskViewModelFactory(private val repository: TaskRepository) : ViewModelProvider.Factory {

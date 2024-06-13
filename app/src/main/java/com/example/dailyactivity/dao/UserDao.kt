@@ -3,6 +3,7 @@ package com.example.dailyactivity.dao
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import com.example.dailyactivity.entity.User
 
 
@@ -22,4 +23,10 @@ interface UserDao {
 
     @Query("SELECT * FROM users WHERE id = :id")
     suspend fun getUserById(id: Int): User?
+
+    @Update
+    suspend fun update(user: User)
+
+    @Query("UPDATE users SET photo = :photo WHERE id = :userId")
+    suspend fun updatePhoto(userId: Int, photo: String)
 }

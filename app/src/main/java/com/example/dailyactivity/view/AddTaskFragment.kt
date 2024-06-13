@@ -1,12 +1,9 @@
 package com.example.dailyactivity.view
 
-
-
-
 import android.app.AlertDialog
 import android.app.DatePickerDialog
-import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,9 +15,10 @@ import com.example.dailyactivity.database.AppDatabase
 import com.example.dailyactivity.databinding.FragmentAddTaskBinding
 import com.example.dailyactivity.entity.Task
 import com.example.dailyactivity.repository.TaskRepository
+import com.example.dailyactivity.utils.SharedPreferencesHelper
 import com.example.dailyactivity.viewmodel.TaskViewModel
 import com.example.dailyactivity.viewmodel.TaskViewModelFactory
-import java.util.Calendar
+import java.util.*
 
 class AddTaskFragment : Fragment() {
 
@@ -41,16 +39,13 @@ class AddTaskFragment : Fragment() {
 
         val database = AppDatabase.getInstance(requireContext())
         val taskDao = database.taskDao()
-
-        // Repository örneği oluştur
         val repository = TaskRepository(taskDao)
-
         val factory = TaskViewModelFactory(repository)
         viewModel = ViewModelProvider(this, factory).get(TaskViewModel::class.java)
 
-        // Kullanıcı ID'sini SharedPreferences'dan alın
-        val sharedPreferences = requireActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
-        userId = sharedPreferences.getInt("userId", -1)
+        // Get userId from SharedPreferences
+        userId = SharedPreferencesHelper.getUserId(requireContext())
+        Log.d("AddTaskFragment", "User ID: $userId")
 
         setupRadioListeners()
         setupCalendarClickListener()
@@ -72,7 +67,6 @@ class AddTaskFragment : Fragment() {
             }
 
             if (userId != -1) {
-                // Görevi veritabanına ekle
                 val task = Task(
                     userId = userId,
                     title = title,
@@ -83,12 +77,15 @@ class AddTaskFragment : Fragment() {
                     type = type,
                     tags = tags
                 )
+                Log.d("AddTaskFragment", "Inserting task: $task")
                 viewModel.insertTask(task)
+            } else {
+                Log.e("AddTaskFragment", "User ID is -1, cannot insert task.")
             }
             showSuccessDialog()
         }
 
-        // EditText alanı tıklandığında takvim açılması
+        // Open calendar when EditText is clicked
         binding.editTextDate.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 openCalendar()
@@ -133,6 +130,7 @@ class AddTaskFragment : Fragment() {
         }
     }
 
+
     private fun openCalendar() {
         val calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)
@@ -146,14 +144,12 @@ class AddTaskFragment : Fragment() {
         datePickerDialog.show()
     }
 
-    private fun  showSuccessDialog() {
+    private fun showSuccessDialog() {
         AlertDialog.Builder(requireContext())
             .setTitle("Başarılı")
             .setMessage("Görev Başarıyla Kaydedildi")
-            .setPositiveButton("Tamam") { dialog, _ -> dialog.dismiss()}
+            .setPositiveButton("Tamam") { dialog, _ -> dialog.dismiss() }
+            .show()
         findNavController().navigate(R.id.action_addTaskFragment_to_homeFragment)
     }
-
-
 }
-

@@ -12,13 +12,14 @@ import com.example.dailyactivity.adapter.HomeAdapter
 import com.example.dailyactivity.database.AppDatabase
 import com.example.dailyactivity.databinding.FragmentHomeBinding
 import com.example.dailyactivity.repository.TaskRepository
+import com.example.dailyactivity.utils.SharedPreferencesHelper
 import com.example.dailyactivity.viewmodel.TaskViewModel
 import com.example.dailyactivity.viewmodel.TaskViewModelFactory
 
 class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
-    private lateinit var adapter: HomeAdapter
+    private lateinit var adapterToday: HomeAdapter // Sadece adapterToday kullanılacak
     private val taskViewModel: TaskViewModel by viewModels {
         TaskViewModelFactory(TaskRepository(AppDatabase.getInstance(requireContext()).taskDao()))
     }
@@ -34,8 +35,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val sharedPreferences = requireActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
-        val userId = sharedPreferences.getInt("userId", -1)
+        val userId = SharedPreferencesHelper.getUserId(requireContext())
 
         if (userId != -1) {
             setupRecyclerView()
@@ -43,18 +43,23 @@ class HomeFragment : Fragment() {
         } else {
             // Handle the case where userId is not found
         }
+
     }
 
     private fun setupRecyclerView() {
-        adapter = HomeAdapter(emptyList(), HomeAdapter.VIEW_TYPE_NORMAL)
+        adapterToday = HomeAdapter(emptyList(), HomeAdapter.VIEW_TYPE_NORMAL)
         binding.homeRecyclerView.layoutManager = LinearLayoutManager(context)
-        binding.homeRecyclerView.adapter = adapter
+        binding.homeRecyclerView.adapter = adapterToday
     }
 
     private fun observeViewModel(userId: Int) {
         taskViewModel.setUserId(userId)
         taskViewModel.allTasks.observe(viewLifecycleOwner) { tasks ->
-            adapter.updateTasks(tasks)
+            val todayTasks = tasks.filter { it.isToday() } // Bugünün görevlerini filtrele
+            adapterToday.updateTasks(todayTasks) // Sadece adapterToday'i güncelle
+            // Kullanıcının ismini TextView'e yerleştirme
+            val userName = SharedPreferencesHelper.getUserName(requireContext())
+            binding.nameTxt.text = "Merhaba, $userName"
         }
     }
 }

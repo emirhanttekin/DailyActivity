@@ -55,4 +55,12 @@ data class Task(
 
         return !taskDate.before(startOfWeek) && !taskDate.after(endOfWeek)
     }
+    fun isThisYear(): Boolean {
+        val today = Calendar.getInstance()
+        val taskDate = Calendar.getInstance().apply {
+            time = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).parse(this@Task.startDate) ?: return false
+        }
+        return today.get(Calendar.YEAR) == taskDate.get(Calendar.YEAR)
+    }
+
 }
